@@ -19,12 +19,12 @@ Pakai Chrome/Edge terbaru dengan WebGL2 dan akselerasi hardware. Tidak membutuhk
 
 ## Cerita pembuka: 1 menit 48 detik
 
-Tekan **Mulai petualangan**. Pada kunjungan pertama, 12 bagian cerita berdurasi total **108 detik** memperkenalkan Miko, Nazwa, dan Raina. Ada kamera adegan, gerakan karakter, musik sintetis, dan **subtitle Indonesia**. Dialog belum memiliki rekaman suara/dubbing.
+Tekan **Mulai cerita & bermain**. Setiap kali tombol ini ditekan, 12 bagian cerita berdurasi total **108 detik** memperkenalkan Miko, Nazwa, dan Raina. Ada kamera adegan, gerakan karakter, musik sintetis, dan **subtitle Indonesia**. Dialog belum memiliki rekaman suara/dubbing.
 
 - **Jeda / Lanjutkan** atau **Esc**: jeda cerita.
 - **Lewati cerita**: langsung masuk permainan.
 - **Putar cerita** di menu: tonton lagi kapan saja.
-- Browser menyimpan status cerita telah ditonton. Tab yang disembunyikan menjeda cerita.
+- Status pernah menonton tidak melewati cutscene secara otomatis. Pilih **Langsung bermain** jika tidak ingin menonton. Tab yang disembunyikan menjeda cerita.
 
 Setelah cerita, dekati Nazwa dan Raina lalu tekan **E** untuk menyapa keduanya. Jelajahi rumah, temukan tiga mainan tersembunyi, lihat kenang-kenangan keluarga, makan, minum, main bola benang, dan tidur.
 
