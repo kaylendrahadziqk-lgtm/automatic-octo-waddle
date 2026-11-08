@@ -1,53 +1,18 @@
-# Validation report
+# Validasi Miko v2 — 8 November 2026
 
-Executed 8 November 2026 in the managed Linux workspace.
+## Lingkungan
 
-## Build and dependencies
+Node 24.22.1, npm 11.9.0; Three.js 0.187.0, Rapier 0.21.0, Vite 8.3.6, Playwright 1.65.0. Chromium memakai SwiftShader (software WebGL2), bukan GPU desktop.
 
-- Node 24.22.1, npm 11.9.0.
-- Three.js 0.187.0, Rapier 0.21.0, Vite 8.3.6, Playwright 1.65.0.
-- Dependency installation completed; dependency lockfile included.
-- `npm run dev` started and served the actual WebGL game on port 5173.
-- `npm run build` succeeded. Main JS: 4,937.9 kB uncompressed / approximately 1,823.4 kB gzip, mostly bundled physics/WASM and rendering libraries. Vite reports a large-chunk advisory, not a build error.
-- `npm run preview -- --port 4173` started successfully.
-- The final browser suite ran against the production preview with `?test=1`.
+## Hasil
 
-## Executed tests
+- Build produksi berhasil. Bundle JS sekitar 5 MB mentah / 1.84 MB gzip; Vite memberi peringatan ukuran bundle, bukan kegagalan.
+- Tes Rapier lulus: ground detection, tembok, ketinggian lompat, dan mendarat.
+- 22 pemeriksaan browser produksi lulus: menu Miko dan dua karakter; intro 108 detik; jeda/lanjut cerita; seluruh 12 bagian cerita dan transisi bermain; subtitle/replay/skip; berjalan/lari; lompat/mendarat; tembok; ramp; kamera orbit/zoom; enam jenis interaksi; sapaan ke kedua karakter; pause gameplay; efek High/Medium/Low, volume, sensitivitas dan fullscreen; menu di empat viewport; persistensi pengaturan/status intro; tanpa error browser atau kegagalan aset.
+- Ukuran layout: 1920×866, 1366×650, 390×844, 800×450.
+- High benar-benar dirender dengan SSAO dan bloom. Screenshot menu, adegan Raina, dan permainan ditinjau. Kamera menu dan lokasi tas kucing diperbaiki setelah pemeriksaan pertama.
+- Alur 108 detik diuji dengan memajukan waktu secara deterministik melalui semua beat, bukan klaim menonton 108 detik secara real-time. Input keyboard, mouse, dan tombol juga diuji melalui browser.
 
-`npm test`: one real Rapier integration test passed, asserting capsule grounding, blocking at a wall, jump height and landing.
+## Batas pengujian
 
-`TEST_URL='http://localhost:4173/?test=1' node tests/browser.mjs`: **21 checks passed** in Chromium using SwiftShader WebGL2:
-
-1. Browser loads WebGL2 scene and main menu.
-2. Play and grounded idle.
-3. Camera-relative walking and acceleration.
-4. Keyboard sprint is faster than walking.
-5. Space jumps, falls, lands and changes animation state.
-6. Mouse drag orbits and wheel zooms.
-7. Wall collision blocks escape.
-8. Training ramp climbs onto raised platform.
-9. Camera collision shortens orbit near walls.
-10. Web Audio context starts after Play gesture.
-11. Food/water recharge increases energy.
-12. Toy interaction starts bouncing ball.
-13. Rest interaction changes resting state.
-14. Training interaction collects a beacon.
-15. Discovery interaction records the memory.
-16. Pause and resume controls.
-17. Graphics presets, sensitivity, zoom, volume and fullscreen controls.
-18. Return to menu and credits.
-19. Narrow 390 × 844 viewport has no horizontal overflow.
-20. Settings persist after reload.
-21. No page errors, HTTP asset failures or failed network requests.
-
-The suite combines real Playwright keyboard/pointer/UI actions with deterministic simulation stepping and controlled test positions. It does not claim a human played every route end to end. Development hot reload interrupted asset requests during an earlier run; the final stable production test had zero failures.
-
-## Visual review and performance
-
-Desktop menu/game screenshots were captured and reviewed. Original robot proportions, UI, procedural scene, exposure, and font delivery were checked. Fonts were moved from a network import into the build after a certificate error. An indexed/nonindexed geometry batching mismatch and a narrow-screen overflow were fixed before final production tests.
-
-The cloud browser uses CPU software rendering (SwiftShader), which is much slower than a desktop GPU; early medium-preset wall-clock observations were below 2 FPS. No hardware 60 FPS claim is made. Low removes shadows; Medium uses 1024px shadows; High uses 2048px shadows and bloom. Static geometry is batched, common geometry/materials are reused, and render resolution adapts to measured wall-clock FPS. Test screenshots and correctness checks do not constitute a hardware benchmark.
-
-## Not verified
-
-Windows 11 was not available for execution; standard Node/Vite commands and platform-neutral source are provided. No public host deployment was performed. Audio context operation was checked, but synthesized audio was not auditioned through speakers. No mobile touch-control support is claimed. Complete session progress is intentionally not saved. Fullscreen passed in standalone Chromium but may be restricted inside embedded views.
+Software rendering cloud lambat dan tidak mewakili FPS hardware pengguna. Tidak ada klaim 60 FPS pada GPU desktop atau kualitas setara Unreal Engine 5. Windows asli, rekaman suara manusia, dan deployment publik tidak diuji/tidak tersedia. Musik menggunakan Web Audio asli; dialog saat ini berupa subtitle.

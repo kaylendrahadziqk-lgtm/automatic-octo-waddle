@@ -73,3 +73,28 @@ header { z-index:2; }
 @media (prefers-reduced-motion:reduce) {
   button,#toast { transition:none; }
 }
+/* Miko: warm editorial typography and cinematic story overlay. */
+:root{color:#3d483c;background:#dad0bc}
+#ui[data-screen="menu"]::before{background:linear-gradient(90deg,#eee6d6fa 0%,#eee6d6e8 24%,#eee6d680 43%,transparent 65%)}
+#menu h1{font-weight:500;letter-spacing:-2px;font-size:clamp(34px,min(4.6vw,8vh),64px);line-height:1.08}
+#menu h1 em{font-size:1.35em;letter-spacing:-3px;margin-top:0;color:#795c3b;font-weight:700}
+#menu .intro{color:#635f50}
+.primary{background:#4c5b45;color:#fff8e9;box-shadow:0 8px 24px #322c2418}
+.primary:hover{background:#657451}
+#menu .menu-links{gap:8px;flex-wrap:wrap}
+#menu .menu-links button{font-size:11px}
+.brand{color:#4c5b45}.brand small{letter-spacing:2px}
+.quest{width:240px}.quest>div{line-height:1.5}
+#story{position:absolute;inset:0;z-index:4;pointer-events:none;background:linear-gradient(#0008,transparent 22%,transparent 60%,#000c);color:#fff6e4}
+#ui[data-screen="story"] header{display:none}
+.cinema-top{position:absolute;top:0;left:0;right:0;min-height:68px;background:#151a16e8;display:flex;justify-content:space-between;align-items:center;padding:18px 32px;gap:16px;font-size:10px;letter-spacing:2px}
+.cinema-top>div{display:flex;gap:12px}
+.cinema-top button{pointer-events:auto;color:#f7e9cf;border:1px solid #fff3;border-radius:6px;background:#ffffff0d;padding:10px 16px;font-size:11px;letter-spacing:.3px}
+.subtitle{position:absolute;bottom:38px;left:50%;transform:translateX(-50%);width:min(760px,90vw);padding:20px 28px;text-align:center;background:#171d18d9;border:1px solid #e1d4ae22;border-radius:12px;backdrop-filter:blur(8px)}
+.subtitle strong{font-size:12px;letter-spacing:2px;color:#dfc492}
+.subtitle p{font-size:clamp(14px,1.4vw,19px);line-height:1.65;margin:10px 0 0;text-wrap:pretty}
+.chapter-title{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#1b251dcc;opacity:0;transition:opacity 1s}
+.chapter-title.visible{opacity:1}.chapter-title span{font-size:10px;letter-spacing:5px;color:#d4bb8c}.chapter-title h2{font:500 clamp(30px,5vw,64px) Outfit;margin:22px;text-align:center}.chapter-title p{font-size:13px;color:#ded2bb;text-align:center;padding:0 20px}
+.story-progress{position:absolute;bottom:0;left:0;right:0;height:3px;background:#ffffff18}.story-progress i{display:block;height:100%;background:#cfb681;width:0}
+@media(max-width:600px){.cinema-top{padding:12px 16px;letter-spacing:1px}.cinema-top>span{display:none}.cinema-top>div{margin-left:auto}.subtitle{bottom:18px;padding:14px 18px}.quest{width:185px}.chapter-title h2{font-size:36px}}
+@media(max-height:540px){.subtitle{bottom:12px;padding:10px 16px}.subtitle p{font-size:13px;margin-top:5px}.cinema-top{min-height:48px;padding:8px 18px}.chapter-title h2{font-size:32px}}

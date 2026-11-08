@@ -1,0 +1,11 @@
+import * as T from 'three';
+import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
+import {box} from './Props.js';
+export class BaseWorld {
+ constructor(scene,physics){this.group=new T.Group();scene.add(this.group);this.physics=physics;this.obstacles=[];this.interactables=[];this.animated=[];this.build();this.batch();}
+ solid(size,pos,color,r=.1,rotation=null){const m=box(this.group,size,pos,color,r);if(rotation)m.rotation.copy(rotation);this.physics.box(size,pos,rotation?m.quaternion:null);this.obstacles.push(m);return m;}
+ activity(type,name,x,z,object){this.interactables.push({type,name,position:new T.Vector3(x,0,z),object,baseY:object.position.y,cooldown:0});}
+ batch(){this.group.updateMatrixWorld(true);const dynamic=new Set([...this.animated,...this.interactables.map(a=>a.object)]),groups=new Map(),remove=[];this.group.traverse(o=>{if(!o.isMesh)return;let n=o;while(n&&n!==this.group){if(dynamic.has(n))return;n=n.parent;}const key=o.material.uuid+o.castShadow;if(!groups.has(key))groups.set(key,{material:o.material,castShadow:o.castShadow,geometries:[]});groups.get(key).geometries.push((o.geometry.index?o.geometry.toNonIndexed():o.geometry.clone()).applyMatrix4(o.matrixWorld));remove.push(o);});remove.forEach(o=>o.removeFromParent());this.batched=[];for(const {material,castShadow,geometries} of groups.values()){const geometry=mergeGeometries(geometries,false);geometries.forEach(g=>g.dispose());if(!geometry)continue;this.batched.push(geometry);const m=new T.Mesh(geometry,material);m.castShadow=castShadow;m.receiveShadow=true;this.group.add(m);}}
+ zone(pos){return this.zones.reduce((a,b)=>Math.hypot(pos.x-a.x,pos.z-a.z)<Math.hypot(pos.x-b.x,pos.z-b.z)?a:b);}
+ update(dt,time){for(const a of this.interactables){a.cooldown=Math.max(0,a.cooldown-dt);if(a.type==='beacon'&&a.object.visible){a.object.rotation.y+=dt*.5;a.object.position.y=a.baseY+Math.sin(time*1.5)*.06;}if(a.type==='toy'){if(a.playTime>0){a.playTime=Math.max(0,a.playTime-dt);a.object.position.set(a.position.x+Math.sin(a.playTime*2)*1.2,a.baseY+Math.abs(Math.sin(a.playTime*5))*.8,a.position.z);a.object.rotation.x+=dt*5;}else a.object.position.set(a.position.x,a.baseY,a.position.z);}}}
+}
