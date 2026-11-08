@@ -1,0 +1,14 @@
+import * as T from 'three';
+import {RoomEnvironment} from 'three/addons/environments/RoomEnvironment.js';
+import {EffectComposer} from 'three/addons/postprocessing/EffectComposer.js';
+import {RenderPass} from 'three/addons/postprocessing/RenderPass.js';
+import {UnrealBloomPass} from 'three/addons/postprocessing/UnrealBloomPass.js';
+import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';
+export class Renderer{
+ constructor(canvas){this.renderer=new T.WebGLRenderer({canvas,antialias:true,powerPreference:'high-performance'});this.renderer.shadowMap.enabled=true;this.renderer.shadowMap.type=T.PCFSoftShadowMap;this.renderer.toneMapping=T.ACESFilmicToneMapping;this.renderer.toneMappingExposure=.85;this.scene=new T.Scene();this.scene.background=new T.Color('#d9e2ce');this.scene.fog=new T.Fog('#d9e2ce',35,75);this.camera=new T.PerspectiveCamera(48,1,.1,110);const pmrem=new T.PMREMGenerator(this.renderer);const room=new RoomEnvironment();this.environment=pmrem.fromScene(room,.04);this.scene.environment=this.environment.texture;room.dispose();pmrem.dispose();this.scene.add(new T.HemisphereLight('#fff5dc','#879a85',1.5));this.sun=new T.DirectionalLight('#fff0ce',2.3);this.sun.position.set(-10,20,8);this.sun.castShadow=true;Object.assign(this.sun.shadow.camera,{left:-25,right:25,top:25,bottom:-25,near:.5,far:70});this.sun.shadow.bias=-.0004;this.sun.shadow.normalBias=.04;this.scene.add(this.sun);this.scene.add(new T.AmbientLight('#fff5e4',.3));this.composer=new EffectComposer(this.renderer);this.composer.addPass(new RenderPass(this.scene,this.camera));this.bloom=new UnrealBloomPass(new T.Vector2(1,1),.13,.5,1.25);this.composer.addPass(this.bloom);this.composer.addPass(new OutputPass());this.quality='medium';this.scale=1;this.apply('medium');this.resizeHandler=()=>this.resize();window.addEventListener('resize',this.resizeHandler);}
+ apply(preset){this.quality=preset;this.scale=1;this.renderer.shadowMap.enabled=preset!=='low';this.sun.shadow.mapSize.setScalar(preset==='high'?2048:1024);if(this.sun.shadow.map){this.sun.shadow.map.dispose();this.sun.shadow.map=null;}this.bloom.enabled=preset==='high';this.resize();}
+ resize(){const ratio=Math.min(devicePixelRatio,this.quality==='low'?1:this.quality==='high'?1.75:1.35)*this.scale;this.renderer.setPixelRatio(ratio);this.renderer.setSize(innerWidth,innerHeight);this.composer.setPixelRatio(ratio);this.composer.setSize(innerWidth,innerHeight);this.camera.aspect=innerWidth/innerHeight;this.camera.updateProjectionMatrix();}
+ adapt(fps){if(fps<42&&this.scale>.65){this.scale=Math.max(.65,this.scale-.1);this.resize();}else if(fps>58&&this.scale<1){this.scale=Math.min(1,this.scale+.05);this.resize();}}
+ render(){if(this.quality==='high')this.composer.render();else this.renderer.render(this.scene,this.camera);}
+ dispose(){window.removeEventListener('resize',this.resizeHandler);this.environment.dispose();this.composer.dispose();this.renderer.dispose();}
+}

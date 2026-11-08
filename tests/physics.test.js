@@ -1,0 +1,4 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {PhysicsWorld} from '../src/physics/PhysicsWorld.js';
+test('capsule settles on floor, stops at wall, jumps and lands',async()=>{const p=await new PhysicsWorld().init();p.box([40,.5,40],[0,-.25,0]);p.box([.4,5,40],[3,2.5,0]);p.player([0,2,0]);let ground=false;for(let i=0;i<180;i++)ground=p.move({x:0,y:-.1,z:0});assert.equal(ground,true);const floor=p.body.translation().y;assert.ok(floor>.7&&floor<.9);for(let i=0;i<180;i++)p.move({x:.1,y:-.1,z:0});assert.ok(p.body.translation().x<2.45);let vy=8.2,peak=floor;for(let i=0;i<180;i++){vy-=22/60;const grounded=p.move({x:0,y:vy/60,z:0});peak=Math.max(peak,p.body.translation().y);if(grounded)vy=0;}assert.ok(peak>floor+1.2);assert.ok(Math.abs(p.body.translation().y-floor)<.03);p.dispose();});
